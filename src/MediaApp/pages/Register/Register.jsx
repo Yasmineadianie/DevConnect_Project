@@ -33,7 +33,7 @@ const Register = () => {
 
     try {
       await axios.post(
-        'https://devconnect-project-w5cq.onrender.com/api/createUser',
+        'https://devconnect-project-w5cq.onrender.com/api/register',
         formData,
       );
       navigate('/login');
