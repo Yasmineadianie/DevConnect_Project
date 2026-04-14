@@ -29,7 +29,7 @@ const Register = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('registerData', JSON.stringify(registerData));
-    if (file) formData.append('file', file);
+    if (file) formData.append('img', file);
 
     try {
       await axios.post(

@@ -1,48 +1,44 @@
-
 import mysql from 'mysql2/promise';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-let connection;
+const connection = mysql.createPool({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  ssl: { rejectUnauthorized: false },
+});
 
-try {
-    connection = await mysql.createConnection({
-        host: process.env.DB_HOST || 'localhost',
-        user: process.env.DB_USER || 'root',
-        password: process.env.DB_PASSWORD || 'root',
-        database: process.env.DB_NAME || 'redes',
-        port: process.env.DB_PORT || 3306,
-        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : null
-    });
-    console.log(" Conexión a la base de datos ok.");
-} catch (error) {
-    console.error(" Error al conectar a la base de datos:", error.message);
-}
-
-export default connection;
-
-// Función para crear la tabla automáticamente
-const crearTablaInicial = async () => {
+const crearTablaSiNoExiste = async () => {
   try {
-    const sql = `
-      CREATE TABLE IF NOT EXISTS user (
-        user_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-        name VARCHAR(50),
-        lastname VARCHAR(50),
-        email VARCHAR(100) UNIQUE NOT NULL,
-        password VARCHAR(100) NOT NULL,
-        bio TEXT,
-        img VARCHAR(100),
-        type SMALLINT NOT NULL DEFAULT 0
-      );
-    `;
-    await connection.query(sql);
-    console.log("Tabla 'user' verificada/creada en Aiven");
-  } catch (err) {
-    console.error(" Error al crear la tabla:", err.message);
+    const query = `
+            CREATE TABLE IF NOT EXISTS user (
+                user_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+                name VARCHAR(100),
+                lastname VARCHAR(100),
+                email VARCHAR(150) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                bio TEXT,
+                img VARCHAR(255) DEFAULT 'default.png',
+                type SMALLINT DEFAULT 0
+            ) ENGINE=InnoDB;
+        `;
+    await connection.query(query);
+    console.log(" ÉXITO: Tabla 'user' verificada o creada en Aiven.");
+  } catch (error) {
+    console.error(' ERROR al crear la tabla:', error.message);
   }
 };
 
-// Ejecutar la función
-crearTablaInicial();
+connection
+  .getConnection()
+  .then(() => {
+    console.log('Conectado a Aiven.');
+    crearTablaSiNoExiste();
+  })
+  .catch((err) => console.error('Error de conexión:', err.message));
+
+export default connection;

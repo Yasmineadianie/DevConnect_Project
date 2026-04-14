@@ -40,22 +40,35 @@ app.use('/images', express.static(__dirname + '/public/images'));
 
 //****************  AUTH Y LOGIN DE LA PAGINA DEvConnect************
 
-app.post('/api/register', async (req, res) => {
-  console.log(req.body);
-  const { name, lastname, email, bio, img, password } = req.body;
+app.post('/api/register', uploadImage('users'), async (req, res) => {
+  console.log(' Intento de Registro ');
+  console.log('Body recibido:', req.body);
+  console.log('Archivo recibido:', req.file);
 
   try {
+    // 1. Extraemos y parseamos los datos que vienen del FormData
+    if (!req.body.registerData) {
+      return res.status(400).json({ message: 'No data provided' });
+    }
+
+    const data = JSON.parse(req.body.registerData);
+    const { name, lastname, email, bio, password } = data;
+
+    // 2. Gestionamos la imagen (Multer la guarda en req.file)
+    const imgName = req.file ? req.file.filename : 'default.png';
+
+    // 3. Encriptamos y guardamos en DB
     let sql =
       'INSERT INTO user(name, lastname, email, bio, img, password) VALUES (?,?,?,?,?,?)';
-    let hashedPAss = await bcrypt.hash(password, 10);
-    let values = [name, lastname, email, bio, img, hashedPAss];
+    let hashedPass = await bcrypt.hash(password, 10);
+    let values = [name, lastname, email, bio, imgName, hashedPass];
+
     await connection.query(sql, values);
 
-    res.status(200).json('todo ok');
+    res.status(200).json({ message: 'User created successfully' });
   } catch (error) {
-    console.log(error);
-
-    res.status(500).json(error);
+    console.error('ERROR EN REGISTER:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
