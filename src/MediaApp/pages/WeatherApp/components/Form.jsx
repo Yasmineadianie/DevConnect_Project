@@ -20,7 +20,7 @@ export const Form = ({ setForecast }) => {
 
     try {
       let res = await axios.get(
-        `http://api.openweathermap.org/data/2.5/forecast/?q=${ciudad}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/forecast/?q=${ciudad}&units=metric&appid=${apiKey}`
       );
       setFailMsg('');
       setCity('');

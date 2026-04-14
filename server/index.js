@@ -11,15 +11,19 @@ import { verifyToken } from './middlewares/verifyToken.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const port = 4000;
+const port = process.env.PORT || 4000;
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'https://dev-connect-project-flax.vercel.app', //  URL de Vercel
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
 app.use(express.json());
 
 app.use('/images', express.static(__dirname + '/public/images'));
 
-//**************** EJERCICIO DE AUTH Y LOGIN DE LA PAGINA DEvConnect************
+//****************  AUTH Y LOGIN DE LA PAGINA DEvConnect************
 
 app.post('/api/register', async (req, res) => {
   console.log(req.body);
