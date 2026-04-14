@@ -14,11 +14,26 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const port = process.env.PORT || 4000;
 const app = express();
 
+const allowedOrigins = [
+  'https://dev-connect-project-flax.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-    origin: 'https://dev-connect-project-flax.vercel.app', //  URL de Vercel
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+  origin: function (origin, callback) {
+    
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Bloqueado por CORS: Origen no permitido'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
+
+
 app.use(express.json());
 
 app.use('/images', express.static(__dirname + '/public/images'));

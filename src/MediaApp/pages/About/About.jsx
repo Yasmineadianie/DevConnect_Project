@@ -11,11 +11,13 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-900 p-8 flex items-center justify-center">
+  
+    <div className="min-h-screen bg-slate-900 p-8 pt-24 flex justify-center items-start md:items-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl w-full bg-slate-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl"
+        transition={{ duration: 0.5 }}
+        className="max-w-4xl w-full bg-slate-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl my-8"
       >
         <div className="text-center mb-12">
           <h2 className="text-4xl font-black text-white mb-4 tracking-tighter">
@@ -38,16 +40,24 @@ const About = () => {
             </h3>
             <p className="text-slate-400 leading-relaxed">
               This project integrates three different universes: a{' '}
-              <span className="text-yellow-400">Pokédex</span>, a{' '}
-              <span className="text-green-400">Multiverse explorer</span> (Rick
-              & Morty), and a
-              <span className="text-blue-400"> Real-time Weather app</span>.
+              <span className="text-yellow-400 font-semibold">Pokédex</span>, a{' '}
+              <span className="text-green-400 font-semibold">
+                Multiverse explorer
+              </span>{' '}
+              (Rick & Morty), and a
+              <span className="text-blue-400 font-semibold">
+                {' '}
+                Real-time Weather app
+              </span>
+              .
             </p>
             <p className="text-slate-400 leading-relaxed">
               Behind the scenes, it manages a{' '}
-              <span className="text-purple-400">MySQL database</span> to handle
-              user profiles and persistent data, proving that design and
-              architecture go hand in hand.
+              <span className="text-purple-400 font-semibold">
+                MySQL database
+              </span>{' '}
+              to handle user profiles and persistent data, proving that design
+              and architecture go hand in hand.
             </p>
           </div>
 
