@@ -19,20 +19,18 @@ const Login = ({ setUser }) => {
 
   const onSubmit = async (e) => {
     e.preventDefault(); 
-    try {
-     let tokenResponse = await axios.post(
-       'https://devconnect-project-w5cq.onrender.com/api/login',
-       login,
-     );
-     localStorage.setItem('token', tokenResponse.data.token);
-     let token = tokenResponse.data.token;
+    // Usamos la variable de entorno para la URL base
+    const API_URL = import.meta.env.VITE_API_URL;
 
-     let resUser = await axios.get(
-       'https://devconnect-project-w5cq.onrender.com/api/getUser',
-       {
-         headers: { authorization: `Bearer ${token}` },
-       },
-     );
+    try {
+      let tokenResponse = await axios.post(`${API_URL}/api/login`, login);
+      localStorage.setItem('token', tokenResponse.data.token);
+      let token = tokenResponse.data.token;
+
+      let resUser = await axios.get(`${API_URL}/api/getUser`, {
+          headers: { authorization: `Bearer ${token}` },
+      });
+      
       setUser(resUser.data.user);
       navigate('/');
     } catch (error) {
@@ -43,10 +41,7 @@ const Login = ({ setUser }) => {
 
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-     
       <div className="bg-slate-800/50 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl p-8 w-full max-w-md">
-        
-        
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black tracking-tighter mb-2">
             <span className="text-white">DEV</span>
@@ -95,7 +90,6 @@ const Login = ({ setUser }) => {
             >
               Sign In
             </button>
-            
             <button 
               type="button"
               onClick={() => navigate('/')}

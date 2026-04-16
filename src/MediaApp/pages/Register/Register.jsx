@@ -32,8 +32,9 @@ const Register = () => {
     if (file) formData.append('img', file);
 
     try {
+      // Usamos la variable de entorno para la URL de registro
       await axios.post(
-        'https://devconnect-project-w5cq.onrender.com/api/register',
+        `${import.meta.env.VITE_API_URL}/api/register`,
         formData,
       );
       navigate('/login');
@@ -66,7 +67,6 @@ const Register = () => {
             <input
               type="text"
               name="name"
-              placeholder="John"
               onChange={handleChange}
               className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-sm focus:border-purple-500 focus:outline-none transition-all"
               required
@@ -80,7 +80,6 @@ const Register = () => {
             <input
               type="text"
               name="lastname"
-              placeholder="Doe"
               onChange={handleChange}
               className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-sm focus:border-purple-500 focus:outline-none transition-all"
               required
@@ -94,7 +93,6 @@ const Register = () => {
             <input
               type="email"
               name="email"
-              placeholder="john@example.com"
               onChange={handleChange}
               className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-sm focus:border-purple-500 focus:outline-none transition-all"
               required
@@ -108,7 +106,6 @@ const Register = () => {
             <input
               type="password"
               name="password"
-              placeholder="••••••••"
               onChange={handleChange}
               className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-sm focus:border-purple-500 focus:outline-none transition-all"
               required
@@ -133,7 +130,6 @@ const Register = () => {
             <textarea
               name="bio"
               rows="2"
-              placeholder="Tech stack..."
               onChange={handleChange}
               className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-lg text-white text-xs focus:border-purple-500 focus:outline-none transition-all resize-none"
             />
