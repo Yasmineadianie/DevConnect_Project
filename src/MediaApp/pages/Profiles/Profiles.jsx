@@ -4,7 +4,8 @@ const Profiles = ({ users = [] }) => {
   // Obtenemos la URL base dinámicamente
   const API_URL = import.meta.env.VITE_API_URL;
 
-  if (!users || users.length === 0) {
+  const usersList = Array.isArray(users) ? users : [];
+  if (usersList.length === 0) {
     return (
       <div className="min-h-screen bg-slate-900 p-8 flex items-center justify-center">
         <h2 className="text-2xl font-bold text-slate-500 animate-pulse">
@@ -24,7 +25,7 @@ const Profiles = ({ users = [] }) => {
       </h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl mx-auto">
-        {users.map((user) => (
+        {usersList.map((user) => (
           <div
             key={user.user_id}
             className="group bg-slate-800 rounded-xl border border-slate-700 hover:border-purple-500 transition-all overflow-hidden shadow-lg"

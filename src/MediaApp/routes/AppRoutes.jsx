@@ -13,44 +13,52 @@ const WeatherApp = lazy(() => import('../pages/WeatherApp/WeatherApp'));
 const PokemonApp = lazy(() => import('../pages/PokemonApp/PokemonApp'));
 const RickMorty = lazy(() => import('../pages/RickMorty/RickMorty'));
 const NotFound = lazy(() => import('../pages/NoFound'));
+
 export const AppRoutes = () => {
   const [user, setUser] = useState();
-  console.log('usuario logueado', user);
-
   const [users, setUsers] = useState([]);
+  
+  // URL de la variable de entorno
+  const API_URL = import.meta.env.VITE_API_URL;
 
+  // 1. Efecto para recuperar sesión del usuario logueado
   useEffect(() => {
     let tokenStorage = localStorage.getItem('token');
     if (tokenStorage) {
       const fetchData = async () => {
         try {
-          let resUser = await axios.get('http://localhost:4000/api/getUser', {
+          // Cambiamos localhost por la variable
+          let resUser = await axios.get(`${API_URL}/api/getUser`, {
             headers: { authorization: `Bearer ${tokenStorage}` },
           });
           setUser(resUser.data.user);
         } catch (error) {
-          console.log(error);
+          console.log("Error recuperando usuario:", error);
         }
       };
       fetchData();
     }
-  }, []);
+  }, [API_URL]); // Añadimos API_URL como dependencia
 
+  // 2. Efecto para cargar todos los perfiles
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('http://localhost:4000/api/profiles');
-        console.log('Respuesta del backend:', res.data);
-        setUsers(res.data[0]);
+        // Cambiamos localhost por la variable
+        const res = await axios.get(`${API_URL}/api/profiles`);
+        console.log('Respuesta limpia del backend:', res.data);
+        
+       // res.data ya es el array de usuarios
+        setUsers(res.data); 
       } catch (error) {
-        console.log(error);
+        console.log("Error cargando perfiles:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [API_URL]);
 
   const logOut = () => {
-    setUser();
+    setUser(undefined);
     localStorage.removeItem('token');
   };
 
@@ -60,11 +68,11 @@ export const AppRoutes = () => {
         <NavbarM user={user} logOut={logOut} />
       </header>
 
-      <main >
+      <main>
         <Suspense
           fallback={
-            <div>
-              <p>Cargando...</p>
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+              <p className="text-white animate-pulse">Cargando...</p>
             </div>
           }
         >
